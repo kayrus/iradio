@@ -1,0 +1,1 @@
+python -mpyftpdlib --directory=$(pwd) --port=2121 --write

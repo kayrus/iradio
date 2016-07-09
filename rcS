@@ -1,0 +1,58 @@
+#!/bin/sh
+# Magic player start here!!   
+
+# Set default Date
+date -s 201501010000
+#  mount part 
+/bin/mount -t proc none /proc
+#/bin/mount -t devpts none /dev/pts
+/bin/mount -t jffs2 /dev/mtdblock0 /flash
+/bin/mount -t sysfs none /sys
+
+#/bin/echo /sbin/mdev > /proc/sys/kernel/hotplug
+/sbin/mdev -s
+
+/bin/mount -t devpts none /dev/pts
+./usr/LCMINIT &
+mkdir /tmp/mplayer
+insmod /sbin/mt7601Usta.ko
+sleep 1
+insmod /sbin/usb-storage.ko
+if [ -f "/sbin/asix.ko" ]; then
+insmod /sbin/asix.ko
+sleep 1
+ifconfig ra0 up
+/sbin/mac
+/sbin/ifconfig eth0 up
+fi
+#telnetd -l /bin/login &
+httpd -p 8080 -h /UIData &
+#if [ -f "/sbin/asix.ko" ]; then
+#sleep 1
+#fi
+
+#####./mplayer/init_process FMINIT
+#  network port
+telnetd -l /bin/login &
+# Backup process
+cd /mplayer
+./init_process MRUN UPDATE
+# JY@2009/09/28 REMOVE version .gz file 
+# rm /tmp/stn.dat.gz
+#sleep 1
+#  player start
+./init_process OSDDAEMON W950OSD &
+rm /tmp/W950OSD.gz
+rm /tmp/W950OSD.lzma
+sleep 1
+
+./init_process OSDDAEMON UIProto &
+rm /tmp/UIProto.gz
+rm /tmp/UIProto.lzma
+
+sleep 5
+unlzma -c /tmp/mplayer.gz > /tmp/mplayer/mplayer
+chmod 755 /tmp/mplayer/mplayer
+./init_process OSDDAEMON mplayer &
+rm /tmp/mplayer.gz
+rm /tmp/mplayer.lzma

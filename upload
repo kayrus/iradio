@@ -1,0 +1,17 @@
+#!/usr/bin/expect
+set timeout 20
+set localhost [lindex $argv 0]
+set ip [lindex $argv 1]
+set user root
+set password password
+
+spawn telnet $ip
+expect "'^]'."
+sleep .1;
+expect "login:"
+send "$user\r"
+expect "Password:"
+send "$password\r"
+expect "#"
+send "ftpget -P2121 $localhost /flash/myradio.cfg myradio.cfg\r"
+expect "#"
