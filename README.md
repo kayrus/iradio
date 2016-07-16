@@ -1,6 +1,62 @@
 # iradio
 Information about the firmware inside Internet Radio (Conrad's renkforce IR 1)
 
+## Favorites
+
+### Prepare source playlist
+
+Create comma separated `playlist.csv` CSV file following the format below:
+
+```csv
+Title,URL
+```
+
+### Compile and run the binary
+
+```sh
+$ gcc favlist.c -o favlist
+$ ./favlist
+```
+
+### Upload generated playlist into device
+
+Install `python-pyftpdlib` package to configure simple FTP server on your local PC.
+
+And `expect` package to automate telnet routines.
+
+Then run:
+
+```sh
+$ ./runftp
+```
+
+to run temporarily FTP server. And then:
+
+```sh
+$ ./upload %SRC_IP% %DST_IP%
+```
+
+to upload `myradio.cfg` from current directory into your Internet Radio.
+
+### myradio.cfg binary format
+
+```
+Amount of entries: 2b
+Every entry len: 366b
+  0x00: 1b
+  0x00|0x02|0x03: 1b
+  0x20 (32): 1b
+  0x00: 6b
+  0x07|0x05: 1b
+  len(0xTITLE+1): 1b
+  0x80: 1b
+  0xTITLE: 40b
+  0x00: 59b
+  0xURL: 250b
+  0x00: 5b
+0x00: 2b
+```
+
 ## Telnet
 
 ```sh
@@ -144,59 +200,3 @@ UIProto Version 3.50 2014/12/04
 [`strings UIProto` output](UIProto_strings.md)
 
 ## [dmesg output](dmesg.md)
-
-## Favorites
-
-### Prepare source playlist
-
-Create comma separated `playlist.csv` CSV file following the format below:
-
-```csv
-Title,URL
-```
-
-### Compile and run the binary
-
-```sh
-$ gcc favlist.c -o favlist
-$ ./favlist
-```
-
-### Upload generated playlist into device
-
-Install `python-pyftpdlib` package to configure simple FTP server on your local PC.
-
-And `expect` package to automate telnet routines.
-
-Then run:
-
-```sh
-$ ./runftp
-```
-
-to run temporarily FTP server. And then:
-
-```sh
-$ ./upload %SRC_IP% %DST_IP%
-```
-
-to upload `myradio.cfg` from current directory into your Internet Radio.
-
-### myradio.cfg binary format
-
-```
-Amount of entries: 2b
-Every entry len: 366b
-  0x00: 1b
-  0x00|0x02|0x03: 1b
-  0x20 (32): 1b
-  0x00: 6b
-  0x07|0x05: 1b
-  len(0xTITLE+1): 1b
-  0x80: 1b
-  0xTITLE: 40b
-  0x00: 59b
-  0xURL: 250b
-  0x00: 5b
-0x00: 2b
-```
