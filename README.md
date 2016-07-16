@@ -86,6 +86,16 @@ Every entry len: 366b
 0x00: 2b
 ```
 
+#### Original file
+
+[`myradio.cfg.orig`](myradio.cfg.orig)
+
+#### Dump HEX in more user friendly format
+
+```sh
+$ xxd -c 183 myradio.cfg.orig
+```
+
 ## Telnet
 
 ```sh
