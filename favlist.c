@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define member_size(type, member) sizeof(((type *)0)->member)
+
 struct strings_list {
 	unsigned short size;
 	struct item *items;
@@ -19,33 +21,58 @@ struct item {
 	unsigned char title[99];
 	unsigned char url[250];
 	unsigned char zeros[5];
+	struct item *next_item;
 };
 
-int add_to_list(struct strings_list *list, const char *title, const char *url) {
-	struct item *tmp_list;
+#define STRUCT_SIZE_NO_PTR 366 /* because of struct alignment next_item pointer adds not 8, but 10*/
 
+int add_to_list(struct strings_list *list, const char *title, const char *url) {
+	struct item *item;
+	struct item *prv_item;
+	int i=0;
+
+	if (title == NULL || url == NULL) {
+		printf("Title or URL are null\n");
+		return -2;
+	}
+	if ((strlen(title)+2) > member_size(struct item, title)) {
+		printf("Title length is too long (%d)\n", (int)strlen(title));
+		return -2;
+	}
+	if (strlen(url) > member_size(struct item, url)) {
+		printf("URL length is too long (%d)\n", (int)strlen(url));
+		return -2;
+	}
 	if (list->size == 0) {
-		list->items = (struct item *)malloc(sizeof(struct item));
+		list->items = (struct item *)calloc(1,sizeof(struct item));
 		if (list->items == NULL) {
 			printf("Error allocating memory\n");
 			return -2;
 		}
+		item = list->items;
 	} else {
-		tmp_list = (struct item *)realloc(list->items,sizeof(struct item)*(list->size+1));
-		if (tmp_list == NULL) {
-			printf("Error reallocating memory\n");
+		item = list->items->next_item;
+		prv_item = list->items;
+		while (item != NULL) {
+			prv_item = item;
+			item = item->next_item;
+		}
+		item = (struct item *)calloc(1,sizeof(struct item));
+		if (item == NULL) {
+			printf("Error allocating memory\n");
 			return -2;
 		}
-		list->items = tmp_list;
+		prv_item->next_item = item;
 	}
 
 	list->size++;
 
-	list->items[list->size-1].space = 0x20;
-	list->items[list->size-1].title_len = strlen(title)+2;
-	list->items[list->size-1].eighty = 0x80;
-	strcpy(list->items[list->size-1].title,title);
-	strcpy(list->items[list->size-1].url,url);
+	item->space = 0x20;
+	item->title_len = strlen(title)+2;
+	item->eighty = 0x80;
+	strcpy(item->title,title);
+	strcpy(item->url,url);
+	item->next_item = NULL;
 
 	return 1;
 }
@@ -64,12 +91,22 @@ const char* getfield(char* line, int num) {
 int save_to_file(struct strings_list *list, char *filename) {
 	FILE *f;
 	unsigned short i;
+	struct item *item;
 
 	f = fopen(filename, "wb");
 	if (f != NULL) {
 		fwrite(&(list->size),sizeof(list->size), 1, f);
 		for( i = 0; i < list->size; i++) {
-			fwrite(&(list->items[i]), sizeof(struct item), 1, f);
+			if (i == 0) {
+				item = list->items;
+			} else {
+				item = item->next_item;
+			}
+			if (item == NULL) {
+				printf("End of list at %d, but size is %d. Stop the loop.\n",i,list->size);
+				break;
+			}
+			fwrite(item, STRUCT_SIZE_NO_PTR, 1, f);
 		}
 		fwrite(&(list->end),sizeof(list->end), 1, f);
 		fclose(f);
@@ -82,22 +119,34 @@ int save_to_file(struct strings_list *list, char *filename) {
 
 int main() {
 	struct strings_list *radio_list=malloc(sizeof(struct strings_list));
-	char *filename = "myradio.cfg";
+	char *import = "playlist.csv";
+	char *export = "myradio.cfg";
 	int res;
 
-	FILE* input = fopen("playlist.csv", "r");
-	char line[1024];
-	while (fgets(line, 1024, input)) {
-		char* tmp = strdup(line);
-		add_to_list(radio_list, getfield(tmp, 1), getfield(tmp, 2));
-		free(tmp);
+	FILE* input = fopen(import, "r");
+	if (input != NULL) {
+		char line[1024];
+		while (fgets(line, 1024, input)) {
+			char* tmp = strdup(line);
+			if (add_to_list(radio_list, getfield(tmp, 1), getfield(tmp, 2)) != 1) {
+				printf("Failed to create binary list\n");
+				free(tmp);
+				fclose(input);
+				return 1;
+			}
+			free(tmp);
+		}
+		fclose(input);
+	} else {
+		printf("Failed to open file '%s' for read\n",import);
+		return 1;
 	}
-	fclose(input);
 
-	res = save_to_file(radio_list,filename);
+	res = save_to_file(radio_list,export);
 	if (res < 0) {
 		return 1;
 	}
+	printf("Successfully wrote '%s' binary playlist\n",export);
 
 	return 0;
 }
