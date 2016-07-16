@@ -18,6 +18,29 @@ $ make
 $ ./favlist
 ```
 
+#### Compile native ARM binary
+
+Commands below will compile native ARM binary and upload it into `/tmp` dir on internet radio device. This command requires `gcc-arm-linux-gnueabi` package.
+
+```sh
+$ make arm
+$ ./upload favlist_arm /tmp %SRC_IP% %DST_IP%
+```
+
+Following command will upload `playlist.csv` into `/tmp` dir on internet radio device.
+
+```sh
+$ ./upload playlist.csv /tmp %SRC_IP% %DST_IP%
+```
+
+Then you can run converter directly on internet radio through telnet:
+
+```sh
+$ telnet %DST_IP%
+# cd /tmp
+# ./favlist_arm
+```
+
 ### Upload generated playlist into device
 
 Install `python-pyftpdlib` package to configure simple FTP server on your local PC.
@@ -33,10 +56,16 @@ $ ./runftp
 to run temporarily FTP server. And then:
 
 ```sh
-$ ./upload %SRC_IP% %DST_IP%
+$ ./upload myradio.cfg /flash %SRC_IP% %DST_IP%
 ```
 
-to upload `myradio.cfg` from current directory into your Internet Radio.
+to upload `myradio.cfg` from the current directory into your Internet Radio's `/flash/` directory.
+
+#### Download file from internet radio device into the current directory
+
+```sh
+$ ./download %remote_full_path% %SRC_IP% %DST_IP%
+```
 
 ### myradio.cfg binary format
 

@@ -121,19 +121,23 @@ int main() {
 	char *import = "playlist.csv";
 	char *export = "myradio.cfg";
 	int res;
+	char line[1024];
+	char *tmp, *tmp1;
 
 	FILE* input = fopen(import, "r");
 	if (input != NULL) {
-		char line[1024];
 		while (fgets(line, 1024, input)) {
-			char* tmp = strdup(line);
-			if (add_to_list(radio_list, getfield(tmp, 1), getfield(tmp, 2)) != 1) {
+			tmp = strdup(line);
+			tmp1 = strdup(line);
+			if (add_to_list(radio_list, getfield(tmp, 1), getfield(tmp1, 2)) != 1) {
 				printf("Failed to create binary list\n");
 				free(tmp);
+				free(tmp1);
 				fclose(input);
 				return 1;
 			}
 			free(tmp);
+			free(tmp1);
 		}
 		fclose(input);
 	} else {

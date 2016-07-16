@@ -1,9 +1,9 @@
 #!/usr/bin/expect
 set timeout 20
-set file [lindex $argv 0]
-set dst_path [lindex $argv 1]
+set path [lindex $argv 0]
+set file [file tail $path]
+set ip [lindex $argv 1]
 set localhost [lindex $argv 2]
-set ip [lindex $argv 3]
 set user root
 set password password
 
@@ -15,5 +15,5 @@ send "$user\r"
 expect "Password:"
 send "$password\r"
 expect "#"
-send "ftpget -P2121 $localhost $dst_path/$file $file\r"
+send "ftpput -P2121 $localhost $file $path\r"
 expect "#"
