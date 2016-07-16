@@ -14,7 +14,7 @@ Title,URL
 ### Compile and run the binary
 
 ```sh
-$ gcc favlist.c -o favlist
+$ make
 $ ./favlist
 ```
 

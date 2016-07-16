@@ -18,8 +18,8 @@ struct item {
 	unsigned char flag2;
 	unsigned char title_len;
 	unsigned char eighty;
-	unsigned char title[99];
-	unsigned char url[250];
+	char title[99];
+	char url[250];
 	unsigned char zeros[5];
 	struct item *next_item;
 };
@@ -29,7 +29,6 @@ struct item {
 int add_to_list(struct strings_list *list, const char *title, const char *url) {
 	struct item *item;
 	struct item *prv_item;
-	int i=0;
 
 	if (title == NULL || url == NULL) {
 		printf("Title or URL are null\n");
