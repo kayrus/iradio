@@ -63,6 +63,8 @@ $ ./upload myradio.cfg /flash %SRC_IP% %DST_IP%
 
 to upload `myradio.cfg` from the current directory into your Internet Radio's `/flash/` directory.
 
+*NOTE:* Reboot the radio after uploading `myradio.cfg` file. There is no other way to apply new favorites list.
+
 #### Download file from internet radio device into the current directory
 
 ```sh
