@@ -241,3 +241,7 @@ UIProto Version 3.50 2014/12/04
 [`strings UIProto` output](UIProto_strings.md)
 
 ## [dmesg output](dmesg.md)
+
+## Renkforce IR 1 board
+
+![Renkforce IR1](renkforce_ir1.jpg)
