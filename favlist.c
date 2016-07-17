@@ -117,7 +117,7 @@ int save_to_file(struct strings_list *list, char *filename) {
 }
 
 int main() {
-	struct strings_list *radio_list=malloc(sizeof(struct strings_list));
+	struct strings_list *radio_list=calloc(1,sizeof(struct strings_list));
 	char *import = "playlist.csv";
 	char *export = "myradio.cfg";
 	int res;

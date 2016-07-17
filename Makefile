@@ -1,5 +1,7 @@
 CC = gcc
+ifeq ($(origin CC_ARM), undefined)
 CC_ARM = arm-linux-gnueabi-gcc
+endif
 CFLAGS = -Wall -g
 
 favlist: favlist.c

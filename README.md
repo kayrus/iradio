@@ -20,10 +20,12 @@ $ ./favlist
 
 #### Compile native ARM binary
 
-Commands below will compile native ARM binary and upload it into `/tmp` dir on internet radio device. This command requires `gcc-arm-linux-gnueabi` package.
+Commands below will compile native ARM binary and upload it into `/tmp` dir on internet radio device. This command requires `gcc-arm-linux-gnueabi` package (but it is recommended to use [musl cross-compilers](http://musl.codu.org/)).
 
 ```sh
 $ make arm
+# or using musl
+# CC_ARM=~/musl/bin/arm-linux-musleabi-gcc make arm
 $ ./upload favlist_arm /tmp %SRC_IP% %DST_IP%
 ```
 
