@@ -1,6 +1,14 @@
 #!/usr/bin/expect
 set timeout 20
+if { $argc < 4 } {
+  puts "Usage: $argv0 %SRC_FILE% %DST_DIR% %SRC_IP% %DST_IP%"
+  exit 1
+}
 set file [lindex $argv 0]
+if {![file exists $file]} {
+  puts "File $file doesn't exist"
+  exit 1
+}
 set dst_path [lindex $argv 1]
 set localhost [lindex $argv 2]
 set ip [lindex $argv 3]
