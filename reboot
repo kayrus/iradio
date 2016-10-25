@@ -1,0 +1,21 @@
+#!/usr/bin/expect
+set timeout 20
+if { $argc < 1 } {
+  puts "Usage: $argv0 %DST_IP%"
+  exit 1
+}
+
+set ip [lindex $argv 0]
+set user root
+set password password
+
+spawn telnet $ip
+expect "'^]'."
+sleep .1;
+expect "login:"
+send "$user\r"
+expect "Password:"
+send "$password\r"
+expect "#"
+send "kill 1\r"
+expect "#"
