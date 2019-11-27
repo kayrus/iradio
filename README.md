@@ -250,6 +250,28 @@ UIProto Version 3.50 2014/12/04
 
 ## [dmesg output](dmesg.md)
 
+## Configuration file
+
+[/flash/product.cfg](product.cfg.md)
+
 ## Renkforce IR 1 board
 
 ![Renkforce IR1](renkforce_ir1.jpg)
+
+## Other links
+
+* https://sites.google.com/site/tweakradje/devices/abeo-internet-radio
+* https://atcnetz.blogspot.com/2013/05/medion-md-86672-wlan-streaming-adapter.html
+
+## Components
+
+* ET2354 - digital control audio processor
+* TPA3110D2 - stereo amplifier
+* N32905U3DN - display control application processor
+* CHMC D3703F - low voltage audio power amplifier
+* WINBOND 25Q32FVSIG - flash memory
+* MT7601UN - WiFi adapter
+
+## Similar Internet Radio devices
+
+* Auna Connect 90
